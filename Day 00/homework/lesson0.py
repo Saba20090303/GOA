@@ -173,12 +173,7 @@ left(160)
 forward(20)
 left(180)
 forward(20)
-penup()
-goto(-200,-200)
-pendown()
-right(20)
-left(90)
-width(200)
-forward(40)
+
+
 
 exitonclick()
