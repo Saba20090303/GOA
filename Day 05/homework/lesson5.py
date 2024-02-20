@@ -2,7 +2,7 @@ from turtle import *
 width(10)
 shape("turtle")
 color("blue")
-speed(10000)
+speed(0)
 penup()
 goto(0,-200)
 pendown()
@@ -321,6 +321,7 @@ forward(50)
 penup()
 goto(100,-200)
 pendown()
+
 #ეზო
 width(10)
 left(180)
