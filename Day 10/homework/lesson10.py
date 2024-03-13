@@ -21,7 +21,7 @@ i1 = (int(input("pleese enter your number:")))#74
 for i in range(74):
     print(i)
 #დავალება 7 
-agenow = (int(input("pleese enter your name:"))) #22
+agenow = (int(input("pleese enter your age:"))) #22
 agefromnow = (int(input("pleese enter your age with 10 years in the future:"))) #32
 for i in range(22,32):
     print(i)
