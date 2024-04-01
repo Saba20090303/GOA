@@ -31,8 +31,8 @@
 
 #დავალება_5
 # nums = [1,2,3,4,5,6,7,8,9,10]
-# for i in range(0,len(nums), 2):
-#     print(nums[i])
+# for i in range(1,len(nums), 2):
+#      print(nums[i])
 # result = 0
 # for num in range(0,11,2):
 #     result = result + num
@@ -48,7 +48,7 @@
 #     print(name[i])
 
 #დავალება_7
-# name = "alexzandre"
+# name = "alexsandre"
 # for i in range(1,len(name), 2):
-#      print(name[i])
+#       print(name[i])
 
