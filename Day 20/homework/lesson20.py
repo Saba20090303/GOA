@@ -1,54 +1,33 @@
 #დავალება_1
-# def is_palindrome(word):
-#     word = word.lower()
-#     start = 0
-#     end = len(word) - 1
-#     while start < end:
-#         if word[start] != word[end]:
-#             return False
-#         start += 1
-#         end -= 1
-#     return True
-# words = ["radar", "level", "rotor", "hello", "Wrold", "racecar"]
-# for word in words:
-#     if is_palindrome(word):
-#         print("{} is a palindrome".format(word))
-#     else:
-#         print("{} is not a palindrome".format(word))
+# word = input("enter a word")
+
+# if word == word[::1]:
+#     print("this word is palindrom")
+# else:
+#     print("this word is not a palintrom")
 
 #დავალება_2
-# def process_list(lst):
-#     new_lst = []
-#     for num in lst:
-#         if lst.count(num) >= 2:
-#             if num not in new_lst:
-#                 new_lst.append(num)
-#     if not new_lst:
-#         print("List is empty")
-#     else:
-#         print(new_lst)
-# box = [
-#     [1, 1, 2, 2, 3],
-#     [1, 2, 3, 4, 5]]
-# for i, lst in enumerate(box, 1):
-#     print(f"box {i}:")
-#     process_list(lst)
+# num1 = [int(input("enter a number:" + str(i +1) + ":"))for i in range(5)]
+# new_list = []
+
+# for num in num1:
+#     if num1.count(num) == 2 and new_list.count(num) == 0:
+#         new_list.append(num)
+
+# if new_list:
+#     print(new_list)
+# else:
+#     print("list is empty")
 
 #დავალება_3
-# def add_first_letter(words):
-#     new_word = ""
-#     for word in words:
-#         new_word += word[0]
-#     print(new_word)
-# box = [
-#     ["Hello", "this", "is", "best", "academy"],
-#     ["Join", "Goa", "and", "become", "chad"]]
-# for words in box:
-#     add_first_letter(words)
+# word_list1 = ["hello","this","is","best","academy"]
+# word_list2 = ["join","GOA","and","become","chad"]
+# print("".join(word[0] for word in word_list1))
+# print("".join(word[0] for word in word_list2))
 
 #დავალება_4
-# first_list = list(range(10, 21))
-# second_list = list(range(30, 51, 5))
-# combined_list = first_list + second_list
+# list1 = list(range(10, 21))
+# list2 = list(range(30, 51, 5))
+# combined_list = list1 + list2
 # print(combined_list)
 
