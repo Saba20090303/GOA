@@ -10,7 +10,7 @@
 # num1 = [int(input("enter a number:" + str(i +1) + ":"))for i in range(5)]
 # new_list = []
 
-# for num in num1:
+#for num in num1:
 #     if num1.count(num) == 2 and new_list.count(num) == 0:
 #         new_list.append(num)
 
