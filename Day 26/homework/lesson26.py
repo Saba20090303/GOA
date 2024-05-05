@@ -19,19 +19,21 @@
 # print("your number: ",user_input,"is",even_odd(user_input))
 
 #დავალება_3
-# def is_prime(number):
-#     if number <= 1:  
-#         return False
-#     if number <= 3: 
-#         return True
-#     if number % 2 == 0 or number % 3 == 0:  
-#         return "not prime"
+def is_prime(number):
+    if number <= 1:  
+        return False
+    if number <= 3: 
+        return True
+    if number % 2 == 0 or number % 3 == 0:  
+        return "not prime"
 
     
-#     for i in range(5, int(number**0.5) + 1):
-#         if number % i == 0:  
-#             return False
-#     return "Prime"
+    for i in range(5, int(number**0.5) + 1):
+        if number % i == 0:  
+            return False
+    return "Prime"
+num = int (input ("enter a number: "))
+print(is_prime(num))
 
 #დავალება_4
 # def capitalised_names(names):
@@ -40,13 +42,13 @@
 # print(capitalised_names(names))
 
 #დავალება_5
-def abdated_list(numbers):
-    updated_numbers =[]
-    for i in numbers:
-        if i % 2 == 0:
-            updated_numbers.append(i // 2)
-        else:
-            updated_numbers.append(i * 2)
-    return updated_numbers
-nums = [1,2,3,4,5,6,7,8,9,10]
-print(abdated_list(nums))
+# def abdated_list(numbers):
+#     updated_numbers =[]
+#     for i in numbers:
+#         if i % 2 == 0:
+#             updated_numbers.append(i // 2)
+#         else:
+#             updated_numbers.append(i * 2)
+#     return updated_numbers
+# nums = [1,2,3,4,5,6,7,8,9,10]
+# print(abdated_list(nums))
