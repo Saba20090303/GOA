@@ -19,21 +19,21 @@
 # print("your number: ",user_input,"is",even_odd(user_input))
 
 #დავალება_3
-def is_prime(number):
-    if number <= 1:  
-        return False
-    if number <= 3: 
-        return True
-    if number % 2 == 0 or number % 3 == 0:  
-        return "not prime"
+# def is_prime(number):
+#     if number <= 1:  
+#         return False
+#     if number <= 3: 
+#         return True
+#     if number % 2 == 0 or number % 3 == 0:  
+#         return "not prime"
 
     
-    for i in range(5, int(number**0.5) + 1):
-        if number % i == 0:  
-            return False
-    return "Prime"
-num = int (input ("enter a number: "))
-print(is_prime(num))
+#     for i in range(5, int(number**0.5) + 1):
+#         if number % i == 0:  
+#             return False
+#     return "Prime"
+# num = int (input ("enter a number: "))
+# print(is_prime(num))
 
 #დავალება_4
 # def capitalised_names(names):
