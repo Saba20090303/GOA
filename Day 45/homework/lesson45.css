@@ -1,0 +1,33 @@
+body{
+    background-color: rgb(233, 233, 233);
+}
+table{
+    overflow: hidden;
+    border-radius: 7px;
+    width: 300px;
+    border-collapse: collapse;
+    height: 130px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+th{
+    background-color: #00A176;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    height: 20px;
+}
+
+.tr1{
+    background-color: white;
+}
+
+td{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.tr2{
+    color: #00A176;
+}
