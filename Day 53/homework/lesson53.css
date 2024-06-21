@@ -1,0 +1,21 @@
+#project{
+    text-align: left;
+}
+
+img{
+    border-radius: 10%;
+    border: 1;
+    text-align: left;
+}
+
+
+
+button{
+    background-color: blue;
+    color: aliceblue;
+    border-radius: 15%;
+}
+
+a{
+    text-align: center;
+}
