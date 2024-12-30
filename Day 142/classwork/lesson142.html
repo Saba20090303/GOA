@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .filters button {
+            padding: 8px;
+            background-color: #f4f4f4;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .filters button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Todo List</h1>
+
+        <input type="text" id="todo-input" placeholder="Add a new task" />
+        <button id="add-btn">Add Todo</button>
+
+        <ul id="todo-list"></ul>
+
+        <div class="filters">
+            <button id="filter-all">All</button>
+            <button id="filter-completed">Completed</button>
+            <button id="filter-pending">Pending</button>
+        </div>
+    </div>
+
+    <script>
+
+        const loadTodos = () => {
+            const todos = JSON.parse(localStorage.getItem('todos')) || [];
+            return todos;
+        };
+
+        const saveTodos = (todos) => {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        };
+
+        const todoInput = document.getElementById('todo-input');
+        const addBtn = document.getElementById('add-btn');
+        const todoList = document.getElementById('todo-list');
+        const filterAll = document.getElementById('filter-all');
+        const filterCompleted = document.getElementById('filter-completed');
+        const filterPending = document.getElementById('filter-pending');
+        
+        let todos = loadTodos();
+        let currentFilter = 'all';
+
+        const renderTodos = () => {
+            todoList.innerHTML = '';
+            
+            const filteredTodos = todos.filter(todo => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'completed') return todo.completed;
+                if (currentFilter === 'pending') return !todo.completed;
+            });
+
+            filteredTodos.forEach((todo, index) => {
+                const todoItem = document.createElement('li');
+                todoItem.classList.add('todo-item');
+                if (todo.completed) todoItem.classList.add('completed');
+                
+                todoItem.innerHTML = `
+                    <span>${todo.text}</span>
+                    <div>
+                        <button onclick="toggleComplete(${index})">✔️</button>
+                        <button onclick="deleteTodo(${index})">❌</button>
+                    </div>
+                `;
+                
+                todoList.appendChild(todoItem);
+            });
+        };
+
+        const addTodo = () => {
+            const newTodo = todoInput.value.trim();
+            if (newTodo) {
+                todos.push({ text: newTodo, completed: false });
+                todoInput.value = '';
+                saveTodos(todos);
+                renderTodos();
+            }
+        };
+
+        const toggleComplete = (index) => {
+            todos[index].completed = !todos[index].completed;
+            saveTodos(todos);
+            renderTodos();
+        };
+
+        const deleteTodo = (index) => {
+            todos.splice(index, 1);
+            saveTodos(todos);
+            renderTodos();
+        };
+
+        addBtn.addEventListener('click', addTodo);
+
+        filterAll.addEventListener('click', () => {
+            currentFilter = 'all';
+            renderTodos();
+        });
+        filterCompleted.addEventListener('click', () => {
+            currentFilter = 'completed';
+            renderTodos();
+        });
+        filterPending.addEventListener('click', () => {
+            currentFilter = 'pending';
+            renderTodos();
+        });
+
+        renderTodos();
+    </script>
+
+</body>
+</html>

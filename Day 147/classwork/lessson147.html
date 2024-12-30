@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Handlers Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        p {
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Event Handlers Example</h1>
+        <p id="text">ეს არის თავდაპირველი ტექსტი.</p>
+        <button id="clickButton">Update Text (handleClick)</button>
+        <button id="correctButton">Update Text with Callback (handleCorrect)</button>
+    </div>
+
+    <script>
+
+        function handleClick() {
+            document.getElementById("text").textContent = "თქვენ დააჭირეთ ღილაკს და ტექსტი განახლდა";
+        }
+
+        function handleCorrect(callback) {
+
+            callback();
+        }
+
+        function updateText() {
+            document.getElementById("text").textContent = "ტექსტი განახლდა ქოლბექ ფუნქციით";
+        }
+
+        document.getElementById("clickButton").addEventListener("click", handleClick);
+        document.getElementById("correctButton").addEventListener("click", function() {
+            handleCorrect(updateText);
+        });
+    </script>
+
+</body>
+</html>

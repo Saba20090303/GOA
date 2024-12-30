@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>დავალებები</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        #resize-message {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #color-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        #color-button:hover {
+            background-color: #45a049;
+        }
+
+        #loading-message {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #ff6600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>გამარჯობა </h1>
+
+    <div id="resize-message">ფანჯარაs ფერი არ აქვს</div>
+    <button id="color-button">შეცვალე ფონი</button>
+    <div id="loading-message">loading...</div>
+
+    <script>
+
+        const resizeMessage = document.getElementById('resize-message');
+        const updateResizeMessage = () => {
+            if (window.innerWidth < window.innerHeight) {
+                resizeMessage.textContent = "ფანჯარას ფერი არ აქვს";
+            } else {
+                resizeMessage.textContent = "ფანჯარა არის ჰორიზონტალური";
+            }
+        };
+
+        window.addEventListener('resize', updateResizeMessage);
+
+        updateResizeMessage();
+
+        const loadingMessage = document.getElementById('loading-message');
+        setInterval(() => {
+            loadingMessage.textContent = "loading...";
+        }, 1000);
+
+        const colorButton = document.getElementById('color-button');
+        const colors = ['#FF6347', '#98FB98', '#87CEEB', '#FFD700', '#32CD32', '#FF4500'];
+        let colorIndex = 0;
+        const changeBackgroundColor = () => {
+            document.body.style.backgroundColor = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+        };
+
+        colorButton.addEventListener('click', changeBackgroundColor);
+
+    </script>
+
+</body>
+</html>
