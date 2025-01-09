@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Dynamic Updates</title>
+    <style>
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 250px;
+        }
+        p {
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Fill out the form</h2>
+
+    <form>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" oninput="updateValues()"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" oninput="updateValues()"><br>
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" oninput="updateValues()"><br>
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" oninput="updateValues()"><br>
+    </form>
+    <p id="emailOutput">Email: </p>
+    <p id="passOutput">Password: </p>
+    <p id="firstNameOutput">First Name: </p>
+    <p id="lastNameOutput">Last Name: </p>
+    <script>
+        function updateValues() {
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var firstName = document.getElementById('firstname').value;
+            var lastName = document.getElementById('lastname').value;
+
+            document.getElementById('emailOutput').textContent = 'Email: ' + email;
+            document.getElementById('passOutput').textContent = 'Password: ' + password;
+            document.getElementById('firstNameOutput').textContent = 'First Name: ' + firstName;
+            document.getElementById('lastNameOutput').textContent = 'Last Name: ' + lastName;
+        }
+    </script>
+
+</body>
+</html>
