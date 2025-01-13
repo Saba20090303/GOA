@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .message {
+            color: red;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="auth-section">
+        <h1>Registration</h1>
+        <form id="register-form">
+            <input type="email" id="register-email" placeholder="Email" required>
+            <input type="password" id="register-pass" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <h1>Login</h1>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-pass" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="error-message" class="message hidden">Invalid credentials, please try again.</p>
+    </div>
+
+    <div id="admin-section" class="hidden">
+        <h1>Welcome, <span id="admin-email"></span></h1>
+        <button id="logout-btn">Logout</button>
+
+        <h2>Add Student</h2>
+        <form id="add-student-form">
+            <input type="text" id="student-name" placeholder="Student Name" required>
+            <input type="text" id="student-lastname" placeholder="Student Lastname" required>
+            <input type="number" id="student-age" placeholder="Student Age" required>
+            <button type="submit">Add Student</button>
+        </form>
+
+        <h2>Students</h2>
+        <table id="students-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Lastname</th>
+                    <th>Age</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="students-list"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+    let currentAccount = JSON.parse(localStorage.getItem("currentAccount")) || null;
+
+    const registerForm = document.getElementById("register-form");
+    const loginForm = document.getElementById("login-form");
+    const errorMessage = document.getElementById("error-message");
+    const authSection = document.getElementById("auth-section");
+    const adminSection = document.getElementById("admin-section");
+    const adminEmail = document.getElementById("admin-email");
+    const logoutBtn = document.getElementById("logout-btn");
+    const addStudentForm = document.getElementById("add-student-form");
+    const studentsList = document.getElementById("students-list");
+    const studentsTable = document.getElementById("students-table");
+
+    function saveToLocalStorage() {
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+        localStorage.setItem("students", JSON.stringify(students));
+        localStorage.setItem("currentAccount", JSON.stringify(currentAccount));
+    }
+
+    function showAdminSection() {
+        authSection.classList.add("hidden");
+        adminSection.classList.remove("hidden");
+        adminEmail.textContent = currentAccount.email;
+        renderStudents();
+    }
+    function showAuthSection() {
+        authSection.classList.remove("hidden");
+        adminSection.classList.add("hidden");
+    }
+
+    function renderStudents() {
+        studentsList.innerHTML = "";
+        students.forEach((student, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.lastname}</td>
+                <td>${student.age}</td>
+                <td><button onclick="deleteStudent(${index})">Delete</button></td>
+            `;
+            studentsList.appendChild(row);
+        });
+    }
+
+    addStudentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("student-name").value;
+        const lastname = document.getElementById("student-lastname").value;
+        const age = document.getElementById("student-age").value;
+        const newStudent = { name, lastname, age };
+        students.push(newStudent);
+        renderStudents();
+        saveToLocalStorage();
+        addStudentForm.reset();
+    });
+
+    function deleteStudent(index) {
+        students.splice(index, 1);
+        renderStudents();
+        saveToLocalStorage();
+    }
+
+    registerForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("register-email").value;
+        const pass = document.getElementById("register-pass").value;
+
+        if (accounts.some(account => account.email === email)) {
+            alert("Account already exists.");
+            return;
+        }
+
+        const newAccount = { email, pass };
+        accounts.push(newAccount);
+        saveToLocalStorage();
+        alert("Registration successful!");
+        registerForm.reset();
+    });
+
+    loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("login-email").value;
+        const pass = document.getElementById("login-pass").value;
+        const loggedInAccount = accounts.find(account => account.email === email && account.pass === pass);
+
+        if (loggedInAccount) {
+            currentAccount = loggedInAccount;
+            saveToLocalStorage();
+            showAdminSection();
+        } else {
+            errorMessage.classList.remove("hidden");
+        }
+
+        loginForm.reset();
+    });
+
+    logoutBtn.addEventListener("click", function () {
+        currentAccount = null;
+        saveToLocalStorage();
+        showAuthSection();
+    });
+
+    if (currentAccount) {
+        showAdminSection();
+    } else {
+        showAuthSection();
+    }
+</script>
+
+</body>
+</html>

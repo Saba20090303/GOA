@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <section id="auth-section">
+            <h1>Registration</h1>
+            <form id="register-form">
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-pass" placeholder="Password" required>
+                <button type="submit">Submit</button>
+            </form>
+
+            <h1>Login</h1>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-pass" placeholder="Password" required>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <section id="main-section" style="display: none;">
+            <h1>Hello <span id="account-email"></span></h1>
+            <button id="logout-btn">Log out</button>
+
+            <h2>Update Account</h2>
+            <button id="edit-account-btn">Edit Account</button>
+
+            <form id="edit-account-form" style="display: none;">
+                <input type="email" id="edit-email" required>
+                <input type="password" id="edit-pass" required>
+                <button type="submit">Update Account</button>
+            </form>
+
+            <h2>Add Student</h2>
+            <form id="add-student-form">
+                <input type="text" id="student-name" placeholder="Student Name" required>
+                <input type="text" id="student-lastname" placeholder="Student Lastname" required>
+                <input type="number" id="student-age" placeholder="Student Age" required>
+                <button type="submit">Add Student</button>
+            </form>
+
+            <h2>Students</h2>
+            <table id="students-table">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Age</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="students-list"></tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+        let students = JSON.parse(localStorage.getItem("students")) || [];
+        let account = JSON.parse(localStorage.getItem("account")) || null;
+
+        const authSection = document.getElementById("auth-section");
+        const mainSection = document.getElementById("main-section");
+        const studentsList = document.getElementById("students-list");
+        const accountEmail = document.getElementById("account-email");
+        const logoutBtn = document.getElementById("logout-btn");
+        const editAccountBtn = document.getElementById("edit-account-btn");
+        const editAccountForm = document.getElementById("edit-account-form");
+        const addStudentForm = document.getElementById("add-student-form");
+        const studentsTable = document.getElementById("students-table");
+        const registerForm = document.getElementById("register-form");
+        const loginForm = document.getElementById("login-form");
+
+        function saveToLocalStorage() {
+            localStorage.setItem("account", JSON.stringify(account));
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+            localStorage.setItem("students", JSON.stringify(students));
+        }
+
+        registerForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("register-email").value;
+            const pass = document.getElementById("register-pass").value;
+
+            if (accounts.some(acc => acc.email === email)) {
+                alert("Account already exists. Please log in.");
+                return;
+            }
+            accounts.push({ email, pass });
+            alert("Account created successfully!");
+            saveToLocalStorage();
+            registerForm.reset();
+        });
+
+        loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const pass = document.getElementById("login-pass").value;
+            const loggedInUser = accounts.find(acc => acc.email === email && acc.pass === pass);
+
+            if (!loggedInUser) {
+                alert("Invalid credentials. Please try again.");
+                return;
+            }
+
+            account = loggedInUser;
+            alert("Logged in successfully!");
+            saveToLocalStorage();
+            showMainSection();
+        });
+
+        logoutBtn.addEventListener("click", function () {
+            account = null;
+            alert("Logged out successfully!");
+            saveToLocalStorage();
+            showAuthSection();
+        });
+
+        function showMainSection() {
+            authSection.style.display = "none";
+            mainSection.style.display = "block";
+            accountEmail.textContent = account.email;
+            renderStudents();
+        }
+        function showAuthSection() {
+            authSection.style.display = "block";
+            mainSection.style.display = "none";
+        }
+        function renderStudents() {
+            studentsList.innerHTML = "";
+            students.forEach((student, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.lastname}</td>
+                    <td>${student.age}</td>
+                    <td>
+                        <button onclick="editStudent(${index})">Edit</button>
+                        <button onclick="deleteStudent(${index})">Delete</button>
+                    </td>
+                `;
+                studentsList.appendChild(row);
+            });
+        }
+
+        addStudentForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const name = document.getElementById("student-name").value;
+            const lastname = document.getElementById("student-lastname").value;
+            const age = document.getElementById("student-age").value;
+
+            students.push({ name, lastname, age });
+            renderStudents();
+            saveToLocalStorage();
+            addStudentForm.reset();
+        });
+
+        // Edit student
+        function editStudent(index) {
+            const student = students[index];
+            const name = prompt("Enter new name", student.name);
+            const lastname = prompt("Enter new lastname", student.lastname);
+            const age = prompt("Enter new age", student.age);
+
+            if (name && lastname && age) {
+                students[index] = { name, lastname, age };
+                renderStudents();
+                saveToLocalStorage();
+            }
+        }
+
+        function deleteStudent(index) {
+            students.splice(index, 1);
+            renderStudents();
+            saveToLocalStorage();
+        }
+
+        editAccountBtn.addEventListener("click", function () {
+            editAccountForm.style.display = "block";
+            document.getElementById("edit-email").value = account.email;
+            document.getElementById("edit-pass").value = account.pass;
+        });
+
+        editAccountForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const email = document.getElementById("edit-email").value;
+            const pass = document.getElementById("edit-pass").value;
+
+            account.email = email;
+            account.pass = pass;
+            saveToLocalStorage();
+            alert("Account updated successfully!");
+            editAccountForm.style.display = "none";
+        });
+
+        if (account) {
+            showMainSection();
+        } else {
+            showAuthSection();
+        }
+
+    </script>
+
+</body>
+</html>
