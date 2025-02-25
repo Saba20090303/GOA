@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .calculator {
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    .calculator h2 {
+      margin-bottom: 20px;
+    }
+    .calculator input {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .calculator button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .calculator button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <h2>Calculator</h2>
+
+    <input type="number" id="number1" placeholder="Enter first number">
+    <input type="number" id="number2" placeholder="Enter second number">
+    <button onclick="calculateSum()">Calculate Sum</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    function calculateSum() {
+      const number1 = parseFloat(document.getElementById('number1').value);
+      const number2 = parseFloat(document.getElementById('number2').value);
+
+      if (isNaN(number1) || isNaN(number2)) {
+        alert('Please enter valid numbers');
+        return;
+      }
+      const sum = number1 + number2;
+
+      document.getElementById('result').textContent = `Result: ${sum}`;
+    }
+  </script>
+</body>
+</html>

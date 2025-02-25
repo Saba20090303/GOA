@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        #searchBar {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .book-item {
+            display: flex;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+        .book-item img {
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        .book-item .book-details {
+            flex-grow: 1;
+        }
+        .book-item .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .book-item .book-author {
+            font-size: 16px;
+            color: #777;
+        }
+        .book-item button {
+            padding: 8px 12px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .book-item button.remove {
+            background-color: #f44336;
+        }
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .filter-container button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #eee;
+            cursor: pointer;
+        }
+        .filter-container button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Book Library App</h1>
+        <input type="text" id="searchBar" placeholder="Search for books by title, author, or genre" />
+        <div id="bookList"></div>
+        <div class="filter-container">
+            <button class="filter-button" id="allFilter">All</button>
+            <button class="filter-button" id="readFilter">Read</button>
+            <button class="filter-button" id="unreadFilter">Unread</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
+        let booksLibrary = JSON.parse(localStorage.getItem("booksLibrary")) || [];
+        let filterStatus = "all";
+
+        function renderBooks(books) {
+            const bookList = document.getElementById("bookList");
+            bookList.innerHTML = "";
+            books.forEach((book, index) => {
+                const bookItem = document.createElement("div");
+                bookItem.classList.add("book-item");
+
+                const bookImage = book.volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/80x120";
+                const bookTitle = book.volumeInfo.title || "No Title";
+                const bookAuthor = book.volumeInfo.authors ? book.volumeInfo.authors.join(", ") : "No Author";
+
+                bookItem.innerHTML = `
+                    <img src="${bookImage}" alt="${bookTitle}" />
+                    <div class="book-details">
+                        <div class="book-title">${bookTitle}</div>
+                        <div class="book-author">${bookAuthor}</div>
+                    </div>
+                    <button onclick="toggleReadStatus(${index})">
+                        ${booksLibrary[index]?.status === "read" ? "Mark as Unread" : "Mark as Read"}
+                    </button>
+                    <button class="remove" onclick="removeBook(${index})">Remove</button>
+                `;
+
+                bookList.appendChild(bookItem);
+            });
+        }
+
+        function searchBooks(query) {
+            if (!query) return;
+
+            fetch(API_URL + query)
+                .then(response => response.json())
+                .then(data => {
+                    const books = data.items || [];
+                    renderBooks(books);
+                })
+                .catch(error => console.error("Error fetching books:", error));
+        }
+
+        function addBookToLibrary(book) {
+            const bookExists = booksLibrary.some(b => b.id === book.id);
+            if (!bookExists) {
+                booksLibrary.push({ ...book, status: "unread" });
+                localStorage.setItem("booksLibrary", JSON.stringify(booksLibrary));
+                renderBooks(booksLibrary);
+            }
+        }
+
+        function toggleReadStatus(index) {
+            booksLibrary[index].status = booksLibrary[index].status === "read" ? "unread" : "read";
+            localStorage.setItem("booksLibrary", JSON.stringify(booksLibrary));
+            renderBooks(booksLibrary);
+        }
+
+        function removeBook(index) {
+            booksLibrary.splice(index, 1);
+            localStorage.setItem("booksLibrary", JSON.stringify(booksLibrary));
+            renderBooks(booksLibrary);
+        }
+
+        function filterBooks() {
+            let filteredBooks = booksLibrary;
+            if (filterStatus === "read") {
+                filteredBooks = booksLibrary.filter(book => book.status === "read");
+            } else if (filterStatus === "unread") {
+                filteredBooks = booksLibrary.filter(book => book.status === "unread");
+            }
+            renderBooks(filteredBooks);
+        }
+
+        document.getElementById("searchBar").addEventListener("input", (e) => {
+            searchBooks(e.target.value);
+        });
+
+        document.getElementById("allFilter").addEventListener("click", () => {
+            filterStatus = "all";
+            document.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("active"));
+            document.getElementById("allFilter").classList.add("active");
+            filterBooks();
+        });
+
+        document.getElementById("readFilter").addEventListener("click", () => {
+            filterStatus = "read";
+            document.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("active"));
+            document.getElementById("readFilter").classList.add("active");
+            filterBooks();
+        });
+
+        document.getElementById("unreadFilter").addEventListener("click", () => {
+            filterStatus = "unread";
+            document.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("active"));
+            document.getElementById("unreadFilter").classList.add("active");
+            filterBooks();
+        });
+
+        searchBooks("");
+        renderBooks(booksLibrary);
+
+    </script>
+</body>
+</html>
